@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String _baseUrl = 'https://api.quickneeds.com'; // Replace with your actual API base URL
+  // TODO: Replace with your actual production API base URL
+  final String _baseUrl = 'http://localhost:8000/api/v1';
   final http.Client client;
 
   ApiService({http.Client? client}) : this.client = client ?? http.Client();
