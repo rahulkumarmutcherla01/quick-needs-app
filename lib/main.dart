@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project/src/screens/auth/login_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/src/common/theme/app_theme.dart';
+import 'package:project/src/features/auth/bloc/auth_bloc.dart';
+import 'package:project/src/features/auth/ui/screens/login_screen.dart';
+import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
+import 'package:project/src/features/home/ui/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,13 +15,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'QuickNeeds',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return BlocProvider(
+      create: (context) => AuthBloc()..add(AuthAppStarted()),
+      child: MaterialApp(
+        title: 'QuickNeeds',
+        theme: AppTheme.lightTheme,
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              return const HomeScreen();
+            }
+            if (state is AuthUnauthenticated) {
+              return const LoginScreen();
+            }
+            return const SplashScreen();
+          },
+        ),
       ),
-      home: const LoginScreen(),
     );
   }
 }
