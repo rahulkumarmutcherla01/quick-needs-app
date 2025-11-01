@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   // TODO: Replace with your actual production API base URL
-  final String _baseUrl = 'http://localhost:8000/api/v1';
+  final String _baseUrl = 'http://192.168.1.14:8000/api/v1';
   final http.Client client;
 
   ApiService({http.Client? client}) : this.client = client ?? http.Client();
