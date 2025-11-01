@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package.mockito/annotations.dart';
-import 'package.mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:project/src/api/api_service.dart';
 
 import 'api_service_test.mocks.dart';
