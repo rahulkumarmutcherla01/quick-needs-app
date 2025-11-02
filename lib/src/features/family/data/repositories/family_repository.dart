@@ -55,4 +55,13 @@ class FamilyRepository {
       return false;
     }
   }
+
+  Future<Family> getFamilyDetails() async {
+    final familyId = await _tokenService.getFamilyId();
+    if (familyId == null) {
+      throw Exception('No family ID found');
+    }
+    final response = await _apiService.get('families/$familyId', requireAuth: true);
+    return Family.fromJson(response);
+  }
 }

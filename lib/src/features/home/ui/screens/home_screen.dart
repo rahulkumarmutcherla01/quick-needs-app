@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
+import 'package:project/src/features/family/ui/screens/family_details_screen.dart';
 import 'package:project/src/features/home/ui/widgets/dashboard_card.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -25,20 +26,27 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
-        children: const [
+        children: [
           DashboardCard(
             title: 'Family',
             icon: Icons.group,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FamilyDetailsScreen(),
+                ),
+              );
+            },
           ),
-          DashboardCard(
+          const DashboardCard(
             title: 'Health',
             icon: Icons.favorite,
           ),
-          DashboardCard(
+          const DashboardCard(
             title: 'Items',
             icon: Icons.shopping_cart,
           ),
-          DashboardCard(
+          const DashboardCard(
             title: 'Chat',
             icon: Icons.chat,
           ),
