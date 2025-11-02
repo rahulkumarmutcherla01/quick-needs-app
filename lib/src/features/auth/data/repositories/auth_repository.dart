@@ -15,10 +15,11 @@ class AuthRepository {
       'email': email,
       'password': password,
     });
-    await _tokenService.saveToken(response['accessToken']);
+    final data = response['data'];
+    await _tokenService.saveToken(data['accessToken']);
     // The login response doesn't contain the familyId, so we don't save it here.
     // It will be fetched when the app starts.
-    return User.fromJson(response['user']);
+    return User.fromJson(data['user']);
   }
 
   Future<User> register({
@@ -36,7 +37,7 @@ class AuthRepository {
       'phone_number': phoneNumber,
     });
     // The register endpoint does not return a token, so the user will need to log in after registering.
-    return User.fromJson(response);
+    return User.fromJson(response['data']);
   }
 
   Future<void> logout() async {
@@ -52,7 +53,7 @@ class AuthRepository {
       }
       final familyId = await _tokenService.getFamilyId();
       final response = await _apiService.get('auth/me', requireAuth: true);
-      final user = User.fromJson(response);
+      final user = User.fromJson(response['data']);
       return User(
         id: user.id,
         email: user.email,
