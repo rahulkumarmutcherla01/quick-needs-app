@@ -5,7 +5,6 @@ import 'package:project/src/common/widgets/splash_error_widget.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/auth/ui/screens/create_or_join_family_screen.dart';
 import 'package:project/src/features/auth/ui/screens/login_screen.dart';
-import 'package:project/src/features/auth/ui/screens/registration_success_screen.dart';
 import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
 import 'package:project/src/features/home/ui/screens/home_screen.dart';
 
@@ -31,11 +30,8 @@ class MyApp extends StatelessWidget {
             if (state is AuthAuthenticatedWithoutFamily) {
               return const CreateOrJoinFamilyScreen();
             }
-            if (state is AuthUnauthenticated) {
+            if (state is AuthUnauthenticated || state is AuthRegistrationSuccess) {
               return const LoginScreen();
-            }
-            if (state is AuthRegistrationSuccess) {
-              return const RegistrationSuccessScreen();
             }
             if (state is AuthError) {
               return SplashErrorWidget(
