@@ -16,7 +16,7 @@ class FamilyRepository {
     String? city,
   }) async {
     final response = await _apiService.post(
-      'family/create',
+      'families/create',
       body: {
         'family_name': familyName,
         'family_surname': familySurname,
@@ -24,17 +24,17 @@ class FamilyRepository {
       },
       requireAuth: true,
     );
-    final family = Family.fromJson(response);
+    final family = Family.fromJson(response['data']);
     await _tokenService.saveFamilyId(family.id);
     return family;
   }
 
   Future<void> joinFamily(String familyCode) async {
     final response = await _apiService.post(
-      'family/join',
+      'families/join',
       body: {'family_code': familyCode},
       requireAuth: true,
     );
-    await _tokenService.saveFamilyId(response['familyId']);
+    await _tokenService.saveFamilyId(response['data']['familyId']);
   }
 }
