@@ -61,8 +61,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         phoneNumber: event.phoneNumber,
       );
       // After registration, the user is not automatically logged in.
-      // You might want to emit a state to inform the user to check their email or to log in.
-      emit(AuthUnauthenticated());
+      // Emit a success state to allow the UI to show a confirmation message.
+      emit(AuthRegistrationSuccess());
     } catch (e) {
       emit(AuthError(message: 'Registration Failed: ${e.toString()}'));
     }

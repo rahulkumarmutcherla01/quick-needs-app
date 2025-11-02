@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:project/src/core/storage/token_service.dart';
 
 class ApiService {
-  // TODO: Replace with your actual production API base URL
+  // Using a specific LAN IP for local development. This allows testing on physical devices.
+  // Make sure the device and the server are on the same Wi-Fi network.
+  // TODO: Replace with your actual production API base URL.
   final String _baseUrl = 'http://192.168.1.14:8000/api/v1';
   final http.Client _client;
   final TokenService _tokenService;
