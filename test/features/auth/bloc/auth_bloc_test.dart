@@ -28,7 +28,19 @@ void main() {
     });
 
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthAuthenticated] when user is already logged in',
+      'emits [AuthAuthenticated] when user is already logged in and has a family',
+      build: () {
+        when(mockAuthRepository.getCurrentUser()).thenAnswer(
+          (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test', familyId: 'family1'),
+        );
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(AuthAppStarted()),
+      expect: () => [isA<AuthAuthenticated>()],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthAuthenticatedWithoutFamily] when user is already logged in but has no family',
       build: () {
         when(mockAuthRepository.getCurrentUser()).thenAnswer(
           (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test'),
@@ -36,7 +48,7 @@ void main() {
         return authBloc;
       },
       act: (bloc) => bloc.add(AuthAppStarted()),
-      expect: () => [isA<AuthAuthenticated>()],
+      expect: () => [isA<AuthAuthenticatedWithoutFamily>()],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -50,15 +62,33 @@ void main() {
     );
 
     blocTest<AuthBloc, AuthState>(
-      'emits [AuthLoading, AuthAuthenticated] when login is successful',
+      'emits [AuthLoading, AuthAuthenticated] when login is successful and user has a family',
       build: () {
         when(mockAuthRepository.login(any, any)).thenAnswer(
           (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test'),
+        );
+        when(mockAuthRepository.getCurrentUser()).thenAnswer(
+          (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test', familyId: 'family1'),
         );
         return authBloc;
       },
       act: (bloc) => bloc.add(const AuthLoginRequested(email: 'test@test.com', password: 'password')),
       expect: () => [AuthLoading(), isA<AuthAuthenticated>()],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emits [AuthLoading, AuthAuthenticatedWithoutFamily] when login is successful but user has no family',
+      build: () {
+        when(mockAuthRepository.login(any, any)).thenAnswer(
+          (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test'),
+        );
+        when(mockAuthRepository.getCurrentUser()).thenAnswer(
+          (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test'),
+        );
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(const AuthLoginRequested(email: 'test@test.com', password: 'password')),
+      expect: () => [AuthLoading(), isA<AuthAuthenticatedWithoutFamily>()],
     );
 
     blocTest<AuthBloc, AuthState>(

@@ -25,7 +25,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _authRepository.getCurrentUser();
       if (user != null) {
-        emit(AuthAuthenticated(user: user));
+        if (user.familyId != null) {
+          emit(AuthAuthenticated(user: user));
+        } else {
+          emit(AuthAuthenticatedWithoutFamily(user: user));
+        }
       } else {
         emit(AuthUnauthenticated());
       }
@@ -41,7 +45,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final user = await _authRepository.login(event.email, event.password);
-      emit(AuthAuthenticated(user: user));
+      // After login, we don't know if the user has a family yet.
+      // We rely on the AuthAppStarted event to fetch the familyId.
+      // For a smoother UX, we can check for familyId here as well.
+      final userWithFamily = await _authRepository.getCurrentUser();
+      if (userWithFamily != null) {
+        if (userWithFamily.familyId != null) {
+          emit(AuthAuthenticated(user: userWithFamily));
+        } else {
+          emit(AuthAuthenticatedWithoutFamily(user: userWithFamily));
+        }
+      } else {
+        // This should not happen if login was successful.
+        emit(AuthUnauthenticated());
+      }
     } catch (e) {
       emit(AuthError(message: 'Login Failed: ${e.toString()}'));
     }
