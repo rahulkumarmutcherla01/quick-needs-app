@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:project/src/core/storage/token_service.dart';
 
@@ -9,6 +11,7 @@ class ApiService {
   final String _baseUrl = 'http://192.168.1.14:8000/api/v1';
   final http.Client _client;
   final TokenService _tokenService;
+  static const _timeoutDuration = Duration(seconds: 15);
 
   ApiService({http.Client? client, TokenService? tokenService})
       : _client = client ?? http.Client(),
@@ -16,40 +19,64 @@ class ApiService {
 
   Future<dynamic> get(String endpoint, {bool requireAuth = false}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);
-    final response = await _client.get(
-      Uri.parse('$_baseUrl/$endpoint'),
-      headers: headers,
-    );
-    return _handleResponse(response);
+    try {
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: headers,
+      ).timeout(_timeoutDuration);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw Exception('The connection timed out. Please try again.');
+    } on SocketException {
+      throw Exception('Could not connect to the server. Please check your internet connection.');
+    }
   }
 
   Future<dynamic> post(String endpoint, {dynamic body, bool requireAuth = false}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);
-    final response = await _client.post(
-      Uri.parse('$_baseUrl/$endpoint'),
-      headers: headers,
-      body: jsonEncode(body),
-    );
-    return _handleResponse(response);
+    try {
+      final response = await _client.post(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: headers,
+        body: jsonEncode(body),
+      ).timeout(_timeoutDuration);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw Exception('The connection timed out. Please try again.');
+    } on SocketException {
+      throw Exception('Could not connect to the server. Please check your internet connection.');
+    }
   }
 
   Future<dynamic> put(String endpoint, {dynamic body, bool requireAuth = false}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);
-    final response = await _client.put(
-      Uri.parse('$_baseUrl/$endpoint'),
-      headers: headers,
-      body: jsonEncode(body),
-    );
-    return _handleResponse(response);
+    try {
+      final response = await _client.put(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: headers,
+        body: jsonEncode(body),
+      ).timeout(_timeoutDuration);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw Exception('The connection timed out. Please try again.');
+    } on SocketException {
+      throw Exception('Could not connect to the server. Please check your internet connection.');
+    }
   }
 
   Future<dynamic> delete(String endpoint, {bool requireAuth = false}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);
-    final response = await _client.delete(
-      Uri.parse('$_baseUrl/$endpoint'),
-      headers: headers,
-    );
-    return _handleResponse(response);
+    try {
+      final response = await _client.delete(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: headers,
+      ).timeout(_timeoutDuration);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw Exception('The connection timed out. Please try again.');
+    } on SocketException {
+      throw Exception('Could not connect to the server. Please check your internet connection.');
+    }
   }
 
   Future<Map<String, String>> _getHeaders({bool requireAuth = false}) async {
@@ -70,8 +97,13 @@ class ApiService {
       }
       return jsonDecode(response.body);
     } else {
-      // TODO: Implement more robust error handling
-      throw Exception('Failed to load data: ${response.statusCode}');
+      try {
+        final errorBody = jsonDecode(response.body);
+        final errorMessage = errorBody['message'] ?? 'An unknown error occurred';
+        throw Exception('API Error (${response.statusCode}): $errorMessage');
+      } catch (e) {
+        throw Exception('API Error (${response.statusCode}): Could not parse error response.');
+      }
     }
   }
 }

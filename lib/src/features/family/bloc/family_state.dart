@@ -20,7 +20,9 @@ class FamilyCreationSuccess extends FamilyState {
   List<Object> get props => [family];
 }
 
-class FamilyJoinSuccess extends FamilyState {}
+class FamilyJoinPending extends FamilyState {}
+
+class FamilyJoinApproved extends FamilyState {}
 
 class FamilyError extends FamilyState {
   final String message;
