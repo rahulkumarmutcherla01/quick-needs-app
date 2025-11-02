@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/common/theme/app_theme.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
-import 'package:project/src/features/auth/ui/screens/login_screen.dart';
+import 'package/project/src/features/auth/ui/screens/login_screen.dart';
+import 'package:project/src/features/auth/ui/screens/registration_success_screen.dart';
 import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
 import 'package:project/src/features/home/ui/screens/home_screen.dart';
 
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
             }
             if (state is AuthUnauthenticated) {
               return const LoginScreen();
+            }
+            if (state is AuthRegistrationSuccess) {
+              return const RegistrationSuccessScreen();
             }
             return const SplashScreen();
           },
