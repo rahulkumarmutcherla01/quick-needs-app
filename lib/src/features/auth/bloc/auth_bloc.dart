@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:project/src/core/storage/token_service.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
 import 'package:project/src/features/auth/data/repositories/auth_repository.dart';
 
@@ -8,9 +9,11 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
+  final TokenService _tokenService;
 
-  AuthBloc({AuthRepository? authRepository})
+  AuthBloc({AuthRepository? authRepository, TokenService? tokenService})
       : _authRepository = authRepository ?? AuthRepository(),
+        _tokenService = tokenService ?? TokenService(),
         super(AuthInitial()) {
     on<AuthAppStarted>(_onAppStarted);
     on<AuthLoginRequested>(_onLoginRequested);
@@ -25,7 +28,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _authRepository.getCurrentUser();
       if (user != null) {
-        if (user.familyId != null) {
+        final familyId = await _tokenService.getFamilyId();
+        if (familyId != null) {
           emit(AuthAuthenticated(user: user));
         } else {
           emit(AuthAuthenticatedWithoutFamily(user: user));
@@ -45,22 +49,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final user = await _authRepository.login(event.email, event.password);
-      // After login, we don't know if the user has a family yet.
-      // We rely on the AuthAppStarted event to fetch the familyId.
-      // For a smoother UX, we can check for familyId here as well.
-      final userWithFamily = await _authRepository.getCurrentUser();
-      if (userWithFamily != null) {
-        if (userWithFamily.familyId != null) {
-          emit(AuthAuthenticated(user: userWithFamily));
-        } else {
-          emit(AuthAuthenticatedWithoutFamily(user: userWithFamily));
-        }
+      // After login, we must check if a familyId was already stored for this user.
+      final familyId = await _tokenService.getFamilyId();
+      if (familyId != null) {
+        emit(AuthAuthenticated(user: user));
       } else {
-        // This should not happen if login was successful.
-        emit(AuthUnauthenticated());
+        emit(AuthAuthenticatedWithoutFamily(user: user));
       }
     } catch (e) {
-      emit(AuthError(message: 'Login Failed: ${e.toString()}'));
+      emit(AuthError(message: e.toString()));
     }
   }
 
@@ -77,11 +74,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
         phoneNumber: event.phoneNumber,
       );
-      // After registration, the user is not automatically logged in.
-      // Emit a success state to allow the UI to show a confirmation message.
       emit(AuthRegistrationSuccess());
     } catch (e) {
-      emit(AuthError(message: 'Registration Failed: ${e.toString()}'));
+      emit(AuthError(message: e.toString()));
     }
   }
 

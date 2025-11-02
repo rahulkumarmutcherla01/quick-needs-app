@@ -6,6 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:project/src/core/storage/token_service.dart' as _i5;
 import 'package:project/src/features/auth/data/models/user.dart' as _i2;
 import 'package:project/src/features/auth/data/repositories/auth_repository.dart'
     as _i3;
@@ -120,4 +121,71 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
         ),
         returnValue: _i4.Future<_i2.User?>.value(),
       ) as _i4.Future<_i2.User?>);
+}
+
+/// A class which mocks [TokenService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTokenService extends _i1.Mock implements _i5.TokenService {
+  MockTokenService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> saveToken(String? token) => (super.noSuchMethod(
+        Invocation.method(
+          #saveToken,
+          [token],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<String?> getToken() => (super.noSuchMethod(
+        Invocation.method(
+          #getToken,
+          [],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
+
+  @override
+  _i4.Future<void> deleteToken() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteToken,
+          [],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> saveFamilyId(String? familyId) => (super.noSuchMethod(
+        Invocation.method(
+          #saveFamilyId,
+          [familyId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<String?> getFamilyId() => (super.noSuchMethod(
+        Invocation.method(
+          #getFamilyId,
+          [],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
+
+  @override
+  _i4.Future<void> deleteFamilyId() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteFamilyId,
+          [],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/family/bloc/family_bloc.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_button.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_input_field.dart';
-import 'package:project/src/features/family/ui/screens/pending_approval_screen.dart';
 import 'package:project/src/features/home/ui/screens/home_screen.dart';
 
 class JoinFamilyScreen extends StatefulWidget {
@@ -27,12 +26,7 @@ class _JoinFamilyScreenState extends State<JoinFamilyScreen> {
         create: (context) => FamilyBloc(),
         child: BlocConsumer<FamilyBloc, FamilyState>(
           listener: (context, state) {
-            if (state is FamilyJoinPending) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const PendingApprovalScreen()),
-                (route) => false,
-              );
-            } else if (state is FamilyJoinApproved) {
+            if (state is FamilyJoinApproved) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const HomeScreen()),
                 (route) => false,

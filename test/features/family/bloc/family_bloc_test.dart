@@ -58,13 +58,13 @@ void main() {
     );
 
     blocTest<FamilyBloc, FamilyState>(
-      'emits [FamilyLoading, FamilyJoinPending] when joining a family is successful',
+      'emits [FamilyLoading, FamilyJoinApproved] when joining a family is successful',
       build: () {
         when(mockFamilyRepository.joinFamily(any)).thenAnswer((_) async => {});
         return familyBloc;
       },
       act: (bloc) => bloc.add(const FamilyJoinRequested(familyCode: '12345678')),
-      expect: () => [FamilyLoading(), isA<FamilyJoinPending>()],
+      expect: () => [FamilyLoading(), isA<FamilyJoinApproved>()],
     );
 
     blocTest<FamilyBloc, FamilyState>(
