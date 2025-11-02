@@ -38,21 +38,21 @@ class FamilyRepository {
     await _tokenService.saveFamilyId(response['familyId']);
   }
 
-  // TODO: Create a GET /api/v1/families/me endpoint in the backend that returns the user's family.
-  Future<Family?> getMyFamily() async {
+  Future<bool> checkUserFamilyStatus() async {
+    final familyId = await _tokenService.getFamilyId();
+    if (familyId == null) {
+      return false;
+    }
+
     try {
-      final response = await _apiService.get('families/me', requireAuth: true);
-      if (response == null) {
-        await _tokenService.deleteFamilyId();
-        return null;
-      }
-      final family = Family.fromJson(response);
-      await _tokenService.saveFamilyId(family.id);
-      return family;
+      // This endpoint will confirm if the user is still a member of the family.
+      // If the user was removed, the backend should return a 403 Forbidden error.
+      await _apiService.get('families/$familyId', requireAuth: true);
+      return true;
     } catch (e) {
-      // If the user has no family, the backend might return a 404, which the ApiService will throw as an exception.
+      // If the API call fails (e.g., 403 or 404), it means the user is no longer in that family.
       await _tokenService.deleteFamilyId();
-      return null;
+      return false;
     }
   }
 }

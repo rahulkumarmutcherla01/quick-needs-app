@@ -1,19 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:project/src/core/storage/token_service.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
 import 'package:project/src/features/auth/data/repositories/auth_repository.dart';
+import 'package:project/src/features/family/data/repositories/family_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
-  final TokenService _tokenService;
+  final FamilyRepository _familyRepository;
 
-  AuthBloc({AuthRepository? authRepository, TokenService? tokenService})
+  AuthBloc({AuthRepository? authRepository, FamilyRepository? familyRepository})
       : _authRepository = authRepository ?? AuthRepository(),
-        _tokenService = tokenService ?? TokenService(),
+        _familyRepository = familyRepository ?? FamilyRepository(),
         super(AuthInitial()) {
     on<AuthAppStarted>(_onAppStarted);
     on<AuthLoginRequested>(_onLoginRequested);
@@ -28,8 +28,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _authRepository.getCurrentUser();
       if (user != null) {
-        final familyId = await _tokenService.getFamilyId();
-        if (familyId != null) {
+        final hasFamily = await _familyRepository.checkUserFamilyStatus();
+        if (hasFamily) {
           emit(AuthAuthenticated(user: user));
         } else {
           emit(AuthAuthenticatedWithoutFamily(user: user));
@@ -49,9 +49,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final user = await _authRepository.login(event.email, event.password);
-      // After login, we must check if a familyId was already stored for this user.
-      final familyId = await _tokenService.getFamilyId();
-      if (familyId != null) {
+      final hasFamily = await _familyRepository.checkUserFamilyStatus();
+      if (hasFamily) {
         emit(AuthAuthenticated(user: user));
       } else {
         emit(AuthAuthenticatedWithoutFamily(user: user));

@@ -41,7 +41,6 @@ class AuthRepository {
 
   Future<void> logout() async {
     await _tokenService.deleteToken();
-    await _tokenService.deleteFamilyId();
   }
 
   Future<User?> getCurrentUser() async {

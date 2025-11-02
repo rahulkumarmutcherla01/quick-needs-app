@@ -2,26 +2,26 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:project/src/core/storage/token_service.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
-import 'package:project/src/features/auth/data/repositories/auth_repository.dart';
+import 'package/project/src/features/auth/data/repositories/auth_repository.dart';
+import 'package:project/src/features/family/data/repositories/family_repository.dart';
 
 import 'auth_bloc_test.mocks.dart';
 
-@GenerateMocks([AuthRepository, TokenService])
+@GenerateMocks([AuthRepository, FamilyRepository])
 void main() {
   group('AuthBloc', () {
     late AuthBloc authBloc;
     late MockAuthRepository mockAuthRepository;
-    late MockTokenService mockTokenService;
+    late MockFamilyRepository mockFamilyRepository;
 
     setUp(() {
       mockAuthRepository = MockAuthRepository();
-      mockTokenService = MockTokenService();
+      mockFamilyRepository = MockFamilyRepository();
       authBloc = AuthBloc(
         authRepository: mockAuthRepository,
-        tokenService: mockTokenService,
+        familyRepository: mockFamilyRepository,
       );
     });
 
@@ -39,7 +39,7 @@ void main() {
         when(mockAuthRepository.getCurrentUser()).thenAnswer(
           (_) async => const User(id: '1', email: 'test@test.com', firstName: 'Test'),
         );
-        when(mockTokenService.getFamilyId()).thenAnswer((_) async => 'family1');
+        when(mockFamilyRepository.checkUserFamilyStatus()).thenAnswer((_) async => true);
         return authBloc;
       },
       act: (bloc) => bloc.add(AuthAppStarted()),

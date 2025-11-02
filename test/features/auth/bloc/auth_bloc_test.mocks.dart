@@ -6,10 +6,12 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:project/src/core/storage/token_service.dart' as _i5;
 import 'package:project/src/features/auth/data/models/user.dart' as _i2;
 import 'package:project/src/features/auth/data/repositories/auth_repository.dart'
     as _i3;
+import 'package:project/src/features/family/data/models/family.dart' as _i6;
+import 'package:project/src/features/family/data/repositories/family_repository.dart'
+    as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -26,6 +28,16 @@ import 'package:project/src/features/auth/data/repositories/auth_repository.dart
 
 class _FakeUser_0 extends _i1.SmartFake implements _i2.User {
   _FakeUser_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFamily_1 extends _i1.SmartFake implements _i6.Family {
+  _FakeFamily_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -123,69 +135,60 @@ class MockAuthRepository extends _i1.Mock implements _i3.AuthRepository {
       ) as _i4.Future<_i2.User?>);
 }
 
-/// A class which mocks [TokenService].
+/// A class which mocks [FamilyRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTokenService extends _i1.Mock implements _i5.TokenService {
-  MockTokenService() {
+class MockFamilyRepository extends _i1.Mock implements _i5.FamilyRepository {
+  MockFamilyRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> saveToken(String? token) => (super.noSuchMethod(
+  _i4.Future<_i6.Family> createFamily({
+    required String? familyName,
+    String? familySurname,
+    String? city,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #saveToken,
-          [token],
+          #createFamily,
+          [],
+          {
+            #familyName: familyName,
+            #familySurname: familySurname,
+            #city: city,
+          },
+        ),
+        returnValue: _i4.Future<_i6.Family>.value(_FakeFamily_1(
+          this,
+          Invocation.method(
+            #createFamily,
+            [],
+            {
+              #familyName: familyName,
+              #familySurname: familySurname,
+              #city: city,
+            },
+          ),
+        )),
+      ) as _i4.Future<_i6.Family>);
+
+  @override
+  _i4.Future<void> joinFamily(String? familyCode) => (super.noSuchMethod(
+        Invocation.method(
+          #joinFamily,
+          [familyCode],
         ),
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<String?> getToken() => (super.noSuchMethod(
+  _i4.Future<bool> checkUserFamilyStatus() => (super.noSuchMethod(
         Invocation.method(
-          #getToken,
+          #checkUserFamilyStatus,
           [],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
-
-  @override
-  _i4.Future<void> deleteToken() => (super.noSuchMethod(
-        Invocation.method(
-          #deleteToken,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
-
-  @override
-  _i4.Future<void> saveFamilyId(String? familyId) => (super.noSuchMethod(
-        Invocation.method(
-          #saveFamilyId,
-          [familyId],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
-
-  @override
-  _i4.Future<String?> getFamilyId() => (super.noSuchMethod(
-        Invocation.method(
-          #getFamilyId,
-          [],
-        ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
-
-  @override
-  _i4.Future<void> deleteFamilyId() => (super.noSuchMethod(
-        Invocation.method(
-          #deleteFamilyId,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
 }
