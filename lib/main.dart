@@ -5,9 +5,9 @@ import 'package:project/src/common/widgets/splash_error_widget.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/auth/ui/screens/create_or_join_family_screen.dart';
 import 'package:project/src/features/auth/ui/screens/login_screen.dart';
-import 'package/project/src/features/auth/ui/screens/registration_success_screen.dart';
+import 'package:project/src/features/auth/ui/screens/registration_success_screen.dart';
 import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
-import 'package/project/src/features/home/ui/screens/home_screen.dart';
+import 'package:project/src/features/home/ui/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
