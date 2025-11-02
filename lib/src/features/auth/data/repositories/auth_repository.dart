@@ -1,5 +1,5 @@
 import 'package:project/src/core/api/api_service.dart';
-import 'package:project/src/core/storage/token_service.dart';
+import 'package/project/src/core/storage/token_service.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
 
 class AuthRepository {
@@ -15,11 +15,10 @@ class AuthRepository {
       'email': email,
       'password': password,
     });
-    final data = response['data'];
-    await _tokenService.saveToken(data['accessToken']);
+    await _tokenService.saveToken(response['accessToken']);
     // The login response doesn't contain the familyId, so we don't save it here.
     // It will be fetched when the app starts.
-    return User.fromJson(data['user']);
+    return User.fromJson(response['user']);
   }
 
   Future<User> register({
@@ -37,7 +36,7 @@ class AuthRepository {
       'phone_number': phoneNumber,
     });
     // The register endpoint does not return a token, so the user will need to log in after registering.
-    return User.fromJson(response['data']);
+    return User.fromJson(response);
   }
 
   Future<void> logout() async {
@@ -53,7 +52,7 @@ class AuthRepository {
       }
       final familyId = await _tokenService.getFamilyId();
       final response = await _apiService.get('auth/me', requireAuth: true);
-      final user = User.fromJson(response['data']);
+      final user = User.fromJson(response);
       return User(
         id: user.id,
         email: user.email,

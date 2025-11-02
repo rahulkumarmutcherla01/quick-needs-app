@@ -24,7 +24,7 @@ class FamilyRepository {
       },
       requireAuth: true,
     );
-    final family = Family.fromJson(response['data']);
+    final family = Family.fromJson(response);
     await _tokenService.saveFamilyId(family.id);
     return family;
   }
@@ -35,6 +35,24 @@ class FamilyRepository {
       body: {'family_code': familyCode},
       requireAuth: true,
     );
-    await _tokenService.saveFamilyId(response['data']['familyId']);
+    await _tokenService.saveFamilyId(response['familyId']);
+  }
+
+  // TODO: Create a GET /api/v1/families/me endpoint in the backend that returns the user's family.
+  Future<Family?> getMyFamily() async {
+    try {
+      final response = await _apiService.get('families/me', requireAuth: true);
+      if (response == null) {
+        await _tokenService.deleteFamilyId();
+        return null;
+      }
+      final family = Family.fromJson(response);
+      await _tokenService.saveFamilyId(family.id);
+      return family;
+    } catch (e) {
+      // If the user has no family, the backend might return a 404, which the ApiService will throw as an exception.
+      await _tokenService.deleteFamilyId();
+      return null;
+    }
   }
 }

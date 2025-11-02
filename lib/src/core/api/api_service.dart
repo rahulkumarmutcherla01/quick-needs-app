@@ -91,19 +91,11 @@ class ApiService {
   }
 
   dynamic _handleResponse(http.Response response) {
+    final jsonResponse = jsonDecode(response.body);
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      if (response.body.isEmpty) {
-        return null;
-      }
-      return jsonDecode(response.body);
+      return jsonResponse['data'];
     } else {
-      try {
-        final errorBody = jsonDecode(response.body);
-        final errorMessage = errorBody['message'] ?? 'An unknown error occurred';
-        throw Exception('API Error (${response.statusCode}): $errorMessage');
-      } catch (e) {
-        throw Exception('API Error (${response.statusCode}): Could not parse error response.');
-      }
+      throw Exception(jsonResponse['message'] ?? 'An unknown error occurred');
     }
   }
 }
