@@ -1,5 +1,5 @@
 import 'package:project/src/core/api/api_service.dart';
-import 'package/project/src/core/storage/token_service.dart';
+import 'package:project/src/core/storage/token_service.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
 
 class AuthRepository {

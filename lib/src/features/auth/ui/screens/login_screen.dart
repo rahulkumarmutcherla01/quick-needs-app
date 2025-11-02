@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/auth/ui/screens/register_screen.dart';
-import 'package/project/src/features/auth/ui/widgets/auth_button.dart';
+import 'package:project/src/features/auth/ui/widgets/auth_button.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_input_field.dart';
 
 class LoginScreen extends StatefulWidget {
