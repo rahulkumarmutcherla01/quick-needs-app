@@ -20,6 +20,15 @@ class AuthAuthenticated extends AuthState {
   List<Object> get props => [user];
 }
 
+class AuthAuthenticatedWithoutFamily extends AuthState {
+  final User user;
+
+  const AuthAuthenticatedWithoutFamily({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+
 class AuthUnauthenticated extends AuthState {}
 
 class AuthRegistrationSuccess extends AuthState {}

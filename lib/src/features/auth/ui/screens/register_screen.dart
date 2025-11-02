@@ -12,6 +12,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -29,67 +30,96 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Join QuickNeeds!',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Create an account to get started',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 48),
-              AuthInputField(
-                controller: _firstNameController,
-                labelText: 'First Name',
-              ),
-              const SizedBox(height: 16),
-              AuthInputField(
-                controller: _lastNameController,
-                labelText: 'Last Name',
-              ),
-              const SizedBox(height: 16),
-              AuthInputField(
-                controller: _emailController,
-                labelText: 'Email',
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              AuthInputField(
-                controller: _passwordController,
-                labelText: 'Password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 16),
-              AuthInputField(
-                controller: _phoneNumberController,
-                labelText: 'Phone Number (Optional)',
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 32),
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  return AuthButton(
-                    isLoading: state is AuthLoading,
-                    onPressed: () {
-                      context.read<AuthBloc>().add(
-                            AuthRegisterRequested(
-                              firstName: _firstNameController.text,
-                              lastName: _lastNameController.text,
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                              phoneNumber: _phoneNumberController.text,
-                            ),
-                          );
-                    },
-                    text: 'Create Account',
-                  );
-                },
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Join QuickNeeds!',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Create an account to get started',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 48),
+                AuthInputField(
+                  controller: _firstNameController,
+                  labelText: 'First Name',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your first name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                AuthInputField(
+                  controller: _lastNameController,
+                  labelText: 'Last Name',
+                ),
+                const SizedBox(height: 16),
+                AuthInputField(
+                  controller: _emailController,
+                  labelText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                AuthInputField(
+                  controller: _passwordController,
+                  labelText: 'Password',
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters long';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                AuthInputField(
+                  controller: _phoneNumberController,
+                  labelText: 'Phone Number (Optional)',
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 32),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return AuthButton(
+                      isLoading: state is AuthLoading,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(
+                                AuthRegisterRequested(
+                                  firstName: _firstNameController.text,
+                                  lastName: _lastNameController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  phoneNumber: _phoneNumberController.text,
+                                ),
+                              );
+                        }
+                      },
+                      text: 'Create Account',
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
