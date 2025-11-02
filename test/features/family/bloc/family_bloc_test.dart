@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:project/src/features/family/bloc/family_bloc.dart';
-import 'package/project/src/features/family/data/models/family.dart';
+import 'package:project/src/features/family/data/models/family.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
 
 import 'family_bloc_test.mocks.dart';
@@ -58,13 +58,13 @@ void main() {
     );
 
     blocTest<FamilyBloc, FamilyState>(
-      'emits [FamilyLoading, FamilyJoinSuccess] when joining a family is successful',
+      'emits [FamilyLoading, FamilyJoinPending] when joining a family is successful',
       build: () {
         when(mockFamilyRepository.joinFamily(any)).thenAnswer((_) async => {});
         return familyBloc;
       },
       act: (bloc) => bloc.add(const FamilyJoinRequested(familyCode: '12345678')),
-      expect: () => [FamilyLoading(), isA<FamilyJoinSuccess>()],
+      expect: () => [FamilyLoading(), isA<FamilyJoinPending>()],
     );
 
     blocTest<FamilyBloc, FamilyState>(

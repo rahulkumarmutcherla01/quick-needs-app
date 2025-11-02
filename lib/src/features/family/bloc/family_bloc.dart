@@ -40,7 +40,7 @@ class FamilyBloc extends Bloc<FamilyEvent, FamilyState> {
     emit(FamilyLoading());
     try {
       await _familyRepository.joinFamily(event.familyCode);
-      emit(FamilyJoinSuccess());
+      emit(FamilyJoinPending());
     } catch (e) {
       emit(FamilyError(message: 'Failed to join family: ${e.toString()}'));
     }
