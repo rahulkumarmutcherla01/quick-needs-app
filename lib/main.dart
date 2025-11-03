@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package.flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/common/theme/app_theme.dart';
 import 'package:project/src/common/widgets/splash_error_widget.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
@@ -8,7 +8,9 @@ import 'package:project/src/features/auth/ui/screens/create_or_join_family_scree
 import 'package:project/src/features/auth/ui/screens/login_screen.dart';
 import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
-import 'package/project/src/features/family/ui/screens/family_details_screen.dart';
+import 'package:project/src/features/family/ui/screens/family_details_screen.dart';
+import 'package:project/src/features/items/data/repositories/items_repository.dart';
+import 'package:project/src/features/rooms/data/repositories/rooms_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (context) => AuthRepository()),
         RepositoryProvider(create: (context) => FamilyRepository()),
+        RepositoryProvider(create: (context) => RoomsRepository()),
+        RepositoryProvider(create: (context) => ItemsRepository()),
       ],
       child: BlocProvider(
         create: (context) => AuthBloc(

@@ -4,7 +4,9 @@ import 'package:project/src/common/widgets/logout_button.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/family/bloc/family_details_bloc.dart';
 import 'package:project/src/features/family/data/models/family_member.dart';
-import 'package:project/src/features/items/ui/screens/rooms_dashboard.dart';
+import 'package:project/src/features/family/data/repositories/family_repository.dart';
+import 'package:project/src/features/rooms/data/repositories/rooms_repository.dart';
+import 'package:project/src/features/rooms/ui/screens/rooms_dashboard.dart';
 
 class FamilyDetailsScreen extends StatelessWidget {
   const FamilyDetailsScreen({super.key});
@@ -17,7 +19,9 @@ class FamilyDetailsScreen extends StatelessWidget {
         actions: const [LogoutButton()],
       ),
       body: BlocProvider(
-        create: (context) => FamilyDetailsBloc()..add(FamilyDetailsFetchRequested()),
+        create: (context) => FamilyDetailsBloc(
+          familyRepository: context.read<FamilyRepository>(),
+        )..add(FamilyDetailsFetchRequested()),
         child: BlocBuilder<FamilyDetailsBloc, FamilyDetailsState>(
           builder: (context, state) {
             if (state is FamilyDetailsLoading) {
@@ -95,7 +99,10 @@ class FamilyDetailsScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => RoomsDashboard(isAdmin: amIAdmin),
+                            builder: (_) => BlocProvider.value(
+                              value: BlocProvider.of<FamilyDetailsBloc>(context),
+                              child: RoomsDashboard(isAdmin: amIAdmin),
+                            ),
                           ),
                         );
                       },
