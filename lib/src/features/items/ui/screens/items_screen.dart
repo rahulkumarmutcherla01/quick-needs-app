@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/items/bloc/items_bloc.dart';
+import 'package:project/src/features/items/data/models/item.dart';
 import 'package:project/src/features/items/data/models/room.dart';
 import 'package:project/src/features/items/ui/widgets/add_item_dialog.dart';
+import 'package:project/src/features/items/ui/widgets/update_item_dialog.dart';
 
 class ItemsScreen extends StatelessWidget {
   final Room room;
@@ -30,9 +32,37 @@ class ItemsScreen extends StatelessWidget {
                 itemCount: state.items.length,
                 itemBuilder: (context, index) {
                   final item = state.items[index];
-                  return ListTile(
+                  return CheckboxListTile(
                     title: Text(item.itemName),
                     subtitle: Text('Quantity: ${item.quantity}'),
+                    value: item.status == ItemStatus.PURCHASED,
+                    onChanged: (bool? value) {
+                      if (value == true) {
+                        showDialog(
+                          context: context,
+                          builder: (_) => UpdateItemDialog(
+                            onUpdate: (cost) {
+                              context.read<ItemsBloc>().add(
+                                    ItemUpdateRequested(
+                                      roomId: room.id,
+                                      itemId: item.id,
+                                      status: ItemStatus.PURCHASED,
+                                      cost: cost,
+                                    ),
+                                  );
+                            },
+                          ),
+                        );
+                      } else {
+                        context.read<ItemsBloc>().add(
+                              ItemUpdateRequested(
+                                roomId: room.id,
+                                itemId: item.id,
+                                status: ItemStatus.NEEDED,
+                              ),
+                            );
+                      }
+                    },
                   );
                 },
               );

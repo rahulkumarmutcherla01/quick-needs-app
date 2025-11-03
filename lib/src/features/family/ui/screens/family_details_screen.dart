@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/family/bloc/family_details_bloc.dart';
+import 'package:project/src/features/items/ui/screens/rooms_dashboard.dart';
 
 class FamilyDetailsScreen extends StatelessWidget {
   const FamilyDetailsScreen({super.key});
@@ -9,7 +11,7 @@ class FamilyDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Family Details'),
+        title: const Text('Family Hub'),
       ),
       body: BlocProvider(
         create: (context) => FamilyDetailsBloc()..add(FamilyDetailsFetchRequested()),
@@ -23,6 +25,9 @@ class FamilyDetailsScreen extends StatelessWidget {
             }
             if (state is FamilyDetailsLoadSuccess) {
               final family = state.family;
+              final authState = context.read<AuthBloc>().state;
+              final bool amIAdmin = authState is AuthAuthenticated && authState.user.id == family.createdByUserId;
+
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -64,9 +69,33 @@ class FamilyDetailsScreen extends StatelessWidget {
                             ),
                             title: Text('${member.firstName} ${member.lastName ?? ''}'),
                             subtitle: Text(member.email),
+                            trailing: amIAdmin && member.id != (authState as AuthAuthenticated).user.id
+                                ? IconButton(
+                                    icon: const Icon(Icons.remove_circle_outline),
+                                    onPressed: () {
+                                      context.read<FamilyDetailsBloc>().add(FamilyMemberRemoveRequested(userId: member.id));
+                                    },
+                                  )
+                                : null,
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      'Rooms',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RoomsDashboard(isAdmin: amIAdmin),
+                          ),
+                        );
+                      },
+                      child: const Text('View Rooms'),
                     ),
                   ],
                 ),

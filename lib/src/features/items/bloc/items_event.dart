@@ -32,3 +32,20 @@ class ItemAddRequested extends ItemsEvent {
   @override
   List<Object> get props => [roomId, itemName, quantity];
 }
+
+class ItemUpdateRequested extends ItemsEvent {
+  final String roomId;
+  final String itemId;
+  final ItemStatus status;
+  final double? cost;
+
+  const ItemUpdateRequested({
+    required this.roomId,
+    required this.itemId,
+    required this.status,
+    this.cost,
+  });
+
+  @override
+  List<Object> get props => [roomId, itemId, status];
+}

@@ -62,4 +62,24 @@ class ItemsRepository {
     );
     return Item.fromJson(response);
   }
+
+  Future<void> deleteRoom(String roomId) async {
+    await _apiService.delete('items/rooms/$roomId', requireAuth: true);
+  }
+
+  Future<Item> updateItem({
+    required String itemId,
+    required ItemStatus status,
+    double? cost,
+  }) async {
+    final response = await _apiService.put(
+      'items/$itemId',
+      body: {
+        'status': status.toString().split('.').last,
+        'cost': cost,
+      },
+      requireAuth: true,
+    );
+    return Item.fromJson(response);
+  }
 }

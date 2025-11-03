@@ -104,4 +104,14 @@ class MockFamilyRepository extends _i1.Mock implements _i3.FamilyRepository {
           ),
         )),
       ) as _i4.Future<_i2.Family>);
+
+  @override
+  _i4.Future<void> removeUser(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #removeUser,
+          [userId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

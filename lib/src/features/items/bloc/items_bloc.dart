@@ -14,6 +14,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
         super(ItemsInitial()) {
     on<ItemsFetchRequested>(_onFetchRequested);
     on<ItemAddRequested>(_onAddRequested);
+    on<ItemUpdateRequested>(_onUpdateRequested);
   }
 
   Future<void> _onFetchRequested(
@@ -38,6 +39,22 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
         roomId: event.roomId,
         itemName: event.itemName,
         quantity: event.quantity,
+        cost: event.cost,
+      );
+      add(ItemsFetchRequested(roomId: event.roomId));
+    } catch (e) {
+      emit(ItemsError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateRequested(
+    ItemUpdateRequested event,
+    Emitter<ItemsState> emit,
+  ) async {
+    try {
+      await _itemsRepository.updateItem(
+        itemId: event.itemId,
+        status: event.status,
         cost: event.cost,
       );
       add(ItemsFetchRequested(roomId: event.roomId));

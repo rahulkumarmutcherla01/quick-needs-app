@@ -14,6 +14,7 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         super(RoomsInitial()) {
     on<RoomsFetchRequested>(_onFetchRequested);
     on<RoomAddRequested>(_onAddRequested);
+    on<RoomDeleteRequested>(_onDeleteRequested);
   }
 
   Future<void> _onFetchRequested(
@@ -38,6 +39,18 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         roomName: event.roomName,
         roomIcon: event.roomIcon,
       );
+      add(RoomsFetchRequested());
+    } catch (e) {
+      emit(RoomsError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteRequested(
+    RoomDeleteRequested event,
+    Emitter<RoomsState> emit,
+  ) async {
+    try {
+      await _itemsRepository.deleteRoom(event.roomId);
       add(RoomsFetchRequested());
     } catch (e) {
       emit(RoomsError(message: e.toString()));

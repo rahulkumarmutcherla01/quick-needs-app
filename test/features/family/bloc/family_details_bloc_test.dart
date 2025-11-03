@@ -48,5 +48,15 @@ void main() {
       act: (bloc) => bloc.add(FamilyDetailsFetchRequested()),
       expect: () => [FamilyDetailsLoading(), isA<FamilyDetailsError>()],
     );
+
+    blocTest<FamilyDetailsBloc, FamilyDetailsState>(
+      'emits [] when removing a member is successful',
+      build: () {
+        when(mockFamilyRepository.removeUser(any)).thenAnswer((_) async => {});
+        return familyDetailsBloc;
+      },
+      act: (bloc) => bloc.add(const FamilyMemberRemoveRequested(userId: '1')),
+      expect: () => [],
+    );
   });
 }

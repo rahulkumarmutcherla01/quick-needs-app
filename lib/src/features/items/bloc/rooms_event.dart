@@ -18,3 +18,12 @@ class RoomAddRequested extends RoomsEvent {
   @override
   List<Object> get props => [roomName, roomIcon];
 }
+
+class RoomDeleteRequested extends RoomsEvent {
+  final String roomId;
+
+  const RoomDeleteRequested({required this.roomId});
+
+  @override
+  List<Object> get props => [roomId];
+}

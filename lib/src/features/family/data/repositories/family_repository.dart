@@ -64,4 +64,12 @@ class FamilyRepository {
     final response = await _apiService.get('families/$familyId', requireAuth: true);
     return Family.fromJson(response);
   }
+
+  Future<void> removeUser(String userId) async {
+    final familyId = await _tokenService.getFamilyId();
+    if (familyId == null) {
+      throw Exception('No family ID found');
+    }
+    await _apiService.delete('families/$familyId/members/$userId', requireAuth: true);
+  }
 }

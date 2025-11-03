@@ -8,3 +8,12 @@ abstract class FamilyDetailsEvent extends Equatable {
 }
 
 class FamilyDetailsFetchRequested extends FamilyDetailsEvent {}
+
+class FamilyMemberRemoveRequested extends FamilyDetailsEvent {
+  final String userId;
+
+  const FamilyMemberRemoveRequested({required this.userId});
+
+  @override
+  List<Object> get props => [userId];
+}
