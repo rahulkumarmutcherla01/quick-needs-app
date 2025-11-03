@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
-import 'package:project/src/features/auth/ui/screens/login_screen.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_button.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_input_field.dart';
 
@@ -30,18 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthRegistrationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Registration successful! Please log in.'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-              (route) => false,
-            );
-          } else if (state is AuthError) {
+          if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),

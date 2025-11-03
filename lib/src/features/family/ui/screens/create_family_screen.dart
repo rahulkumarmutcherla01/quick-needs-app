@@ -5,7 +5,6 @@ import 'package:project/src/features/family/bloc/family_bloc.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_button.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_input_field.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
-import 'package:project/src/features/family/ui/screens/family_details_screen.dart';
 
 class CreateFamilyScreen extends StatefulWidget {
   const CreateFamilyScreen({super.key});
