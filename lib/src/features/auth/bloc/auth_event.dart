@@ -39,3 +39,5 @@ class AuthRegisterRequested extends AuthEvent {
 }
 
 class AuthLogoutRequested extends AuthEvent {}
+
+class AuthFamilyUpdated extends AuthEvent {}

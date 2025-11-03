@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/src/common/widgets/logout_button.dart';
 import 'package:project/src/features/items/bloc/items_bloc.dart';
 import 'package:project/src/features/items/data/models/item.dart';
 import 'package:project/src/features/items/data/models/room.dart';
@@ -18,6 +19,7 @@ class ItemsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(room.roomName),
+          actions: const [LogoutButton()],
         ),
         body: BlocBuilder<ItemsBloc, ItemsState>(
           builder: (context, state) {

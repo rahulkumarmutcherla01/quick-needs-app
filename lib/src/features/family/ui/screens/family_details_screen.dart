@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/src/common/widgets/logout_button.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/family/bloc/family_details_bloc.dart';
+import 'package:project/src/features/family/data/models/family_member.dart';
 import 'package:project/src/features/items/ui/screens/rooms_dashboard.dart';
 
 class FamilyDetailsScreen extends StatelessWidget {
@@ -12,6 +14,7 @@ class FamilyDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Family Hub'),
+        actions: const [LogoutButton()],
       ),
       body: BlocProvider(
         create: (context) => FamilyDetailsBloc()..add(FamilyDetailsFetchRequested()),
@@ -25,8 +28,9 @@ class FamilyDetailsScreen extends StatelessWidget {
             }
             if (state is FamilyDetailsLoadSuccess) {
               final family = state.family;
-              final authState = context.read<AuthBloc>().state;
-              final bool amIAdmin = authState is AuthAuthenticated && authState.user.id == family.createdByUserId;
+              final authState = context.read<AuthBloc>().state as AuthAuthenticated;
+              final currentUserMember = family.members?.firstWhere((member) => member.id == authState.user.id);
+              final bool amIAdmin = currentUserMember?.role == UserRole.ADMIN;
 
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -69,11 +73,11 @@ class FamilyDetailsScreen extends StatelessWidget {
                             ),
                             title: Text('${member.firstName} ${member.lastName ?? ''}'),
                             subtitle: Text(member.email),
-                            trailing: amIAdmin && member.id != (authState as AuthAuthenticated).user.id
+                            trailing: amIAdmin && member.id != authState.user.id
                                 ? IconButton(
                                     icon: const Icon(Icons.remove_circle_outline),
                                     onPressed: () {
-                                      context.read<FamilyDetailsBloc>().add(FamilyMemberRemoveRequested(userId: member.id));
+                                      // TODO: Implement remove user functionality
                                     },
                                   )
                                 : null,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project/src/features/auth/bloc/auth_bloc.dart';
+import 'package:project/src/common/widgets/logout_button.dart';
 import 'package:project/src/features/items/bloc/rooms_bloc.dart';
 import 'package:project/src/features/items/ui/screens/items_screen.dart';
 import 'package:project/src/features/items/ui/widgets/add_room_dialog.dart';
@@ -17,6 +17,7 @@ class RoomsDashboard extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Rooms'),
+          actions: const [LogoutButton()],
         ),
         body: BlocBuilder<RoomsBloc, RoomsState>(
           builder: (context, state) {
