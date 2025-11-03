@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/family/bloc/family_bloc.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_button.dart';
 import 'package:project/src/features/auth/ui/widgets/auth_input_field.dart';
-import 'package:project/src/features/items/ui/screens/rooms_dashboard.dart';
+import 'package:project/src/features/family/ui/screens/family_details_screen.dart';
 
 class CreateFamilyScreen extends StatefulWidget {
   const CreateFamilyScreen({super.key});
@@ -30,7 +30,7 @@ class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
           listener: (context, state) {
             if (state is FamilyCreationSuccess) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const RoomsDashboard()),
+                MaterialPageRoute(builder: (context) => const FamilyDetailsScreen()),
                 (route) => false,
               );
             } else if (state is FamilyError) {
