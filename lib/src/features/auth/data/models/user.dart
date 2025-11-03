@@ -22,6 +22,18 @@ class User extends Equatable {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    UserRole? role;
+    if (json['user_family'] != null && json['user_family']['role'] != null) {
+      final roleString = json['user_family']['role'] as String;
+      try {
+        role = UserRole.values
+            .firstWhere((e) => e.toString() == 'UserRole.$roleString');
+      } catch (e) {
+        // Handle cases where the role string doesn't match enum values
+        role = null;
+      }
+    }
+
     return User(
       id: json['id'],
       email: json['email'],
@@ -29,7 +41,7 @@ class User extends Equatable {
       lastName: json['last_name'],
       phoneNumber: json['phone_number'],
       familyId: json['family_id'],
-      // The role is not provided by the auth endpoints, so it will be null here.
+      role: role,
     );
   }
 
@@ -54,5 +66,6 @@ class User extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, email, firstName, lastName, phoneNumber, familyId, role];
+  List<Object?> get props =>
+      [id, email, firstName, lastName, phoneNumber, familyId, role];
 }

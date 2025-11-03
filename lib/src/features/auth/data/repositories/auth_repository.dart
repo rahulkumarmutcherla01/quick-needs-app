@@ -16,8 +16,7 @@ class AuthRepository {
       'password': password,
     });
     await _tokenService.saveToken(response['accessToken']);
-    // The login response doesn't contain the familyId, so we don't save it here.
-    // It will be fetched when the app starts.
+    // The login response might contain the user's family and role.
     return User.fromJson(response['user']);
   }
 
@@ -41,6 +40,7 @@ class AuthRepository {
 
   Future<void> logout() async {
     await _tokenService.deleteToken();
+    await _tokenService.deleteFamilyId();
   }
 
   Future<User?> getCurrentUser() async {
@@ -52,14 +52,9 @@ class AuthRepository {
       final familyId = await _tokenService.getFamilyId();
       final response = await _apiService.get('auth/me', requireAuth: true);
       final user = User.fromJson(response);
-      return User(
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phoneNumber: user.phoneNumber,
-        familyId: familyId,
-      );
+      // Use copyWith to update the familyId from storage, while preserving the role
+      // and other details fetched from the 'auth/me' endpoint.
+      return user.copyWith(familyId: familyId);
     } catch (e) {
       // If the token is invalid, the 'auth/me' call will fail.
       return null;

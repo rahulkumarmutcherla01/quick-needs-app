@@ -47,14 +47,8 @@ class _JoinFamilyScreenState extends State<JoinFamilyScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Enter the Family Code',
+                          'Enter the family code',
                           style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Ask your family head for the 8-character code.',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 48),
                         AuthInputField(
@@ -63,9 +57,6 @@ class _JoinFamilyScreenState extends State<JoinFamilyScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a family code';
-                            }
-                            if (value.length != 8) {
-                              return 'The code must be 8 characters long';
                             }
                             return null;
                           },

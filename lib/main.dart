@@ -8,7 +8,7 @@ import 'package:project/src/features/auth/ui/screens/create_or_join_family_scree
 import 'package:project/src/features/auth/ui/screens/login_screen.dart';
 import 'package:project/src/features/auth/ui/screens/splash_screen.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
-import 'package:project/src/features/family/ui/screens/family_details_screen.dart';
+import 'package/project/src/features/family/ui/screens/family_details_screen.dart';
 
 void main() {
   runApp(const MyApp());
