@@ -11,9 +11,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   final FamilyRepository _familyRepository;
 
-  AuthBloc({AuthRepository? authRepository, FamilyRepository? familyRepository})
-      : _authRepository = authRepository ?? AuthRepository(),
-        _familyRepository = familyRepository ?? FamilyRepository(),
+  AuthBloc({required AuthRepository authRepository, required FamilyRepository familyRepository})
+      : _authRepository = authRepository,
+        _familyRepository = familyRepository,
         super(AuthInitial()) {
     on<AuthAppStarted>(_onAppStarted);
     on<AuthLoginRequested>(_onLoginRequested);

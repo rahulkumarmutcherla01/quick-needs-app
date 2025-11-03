@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/auth/data/models/user.dart';
-import 'package/project/src/features/auth/data/repositories/auth_repository.dart';
+import 'package:project/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
 
 import 'auth_bloc_test.mocks.dart';
