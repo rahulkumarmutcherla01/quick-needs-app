@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/items/bloc/items_bloc.dart';
+import 'package:project/src/features/items/data/models/item.dart';
 import 'package:project/src/features/items/data/repositories/items_repository.dart';
 import 'package:project/src/features/rooms/data/models/room.dart';
 
@@ -38,17 +39,31 @@ class RoomDetailsScreen extends StatelessWidget {
                         final item = state.items[index];
                         return ListTile(
                           title: Text(item.name),
-                          trailing: Checkbox(
-                            value: item.isPurchased,
-                            onChanged: (value) {
-                              context.read<ItemsBloc>().add(
-                                    ItemUpdateRequested(
-                                      roomId: room.id,
-                                      itemId: item.id,
-                                      isPurchased: value,
-                                    ),
-                                  );
-                            },
+                          subtitle: Text('Quantity: ${item.quantity}'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: item.status == ItemStatus.PURCHASED,
+                                onChanged: (value) {
+                                  context.read<ItemsBloc>().add(
+                                        ItemUpdateRequested(
+                                          roomId: room.id,
+                                          itemId: item.id,
+                                          status: value!
+                                              ? ItemStatus.PURCHASED
+                                              : ItemStatus.PENDING,
+                                        ),
+                                      );
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  // TODO: Implement delete functionality
+                                },
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -65,30 +80,45 @@ class RoomDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildCreateItemForm(BuildContext context) {
-    final controller = TextEditingController();
+    final nameController = TextEditingController();
+    final quantityController = TextEditingController();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
           Expanded(
             child: TextField(
-              controller: controller,
+              controller: nameController,
               decoration: const InputDecoration(
                 labelText: 'New Item Name',
               ),
             ),
           ),
+          const SizedBox(width: 16),
+          SizedBox(
+            width: 80,
+            child: TextField(
+              controller: quantityController,
+              decoration: const InputDecoration(
+                labelText: 'Qty',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              if (controller.text.isNotEmpty) {
+              if (nameController.text.isNotEmpty &&
+                  quantityController.text.isNotEmpty) {
                 context.read<ItemsBloc>().add(
                       ItemCreateRequested(
                         roomId: room.id,
-                        name: controller.text,
+                        name: nameController.text,
+                        quantity: int.parse(quantityController.text),
                       ),
                     );
-                controller.clear();
+                nameController.clear();
+                quantityController.clear();
               }
             },
           ),

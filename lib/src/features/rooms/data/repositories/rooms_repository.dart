@@ -1,32 +1,20 @@
 import 'package:project/src/core/api/api_service.dart';
-import 'package:project/src/core/storage/token_service.dart';
 import 'package:project/src/features/rooms/data/models/room.dart';
 
 class RoomsRepository {
   final ApiService _apiService;
-  final TokenService _tokenService;
 
-  RoomsRepository({ApiService? apiService, TokenService? tokenService})
-      : _apiService = apiService ?? ApiService(),
-        _tokenService = tokenService ?? TokenService();
+  RoomsRepository({ApiService? apiService}) : _apiService = apiService ?? ApiService();
 
-  Future<List<Room>> getRooms() async {
-    final familyId = await _tokenService.getFamilyId();
-    if (familyId == null) {
-      throw Exception('No family ID found.');
-    }
-    final response = await _apiService.get('families/$familyId/rooms', requireAuth: true);
+  Future<List<Room>> getRooms(String familyId) async {
+    final response = await _apiService.get('items/rooms?familyId=$familyId', requireAuth: true);
     return (response as List).map((data) => Room.fromJson(data)).toList();
   }
 
-  Future<Room> createRoom(String name) async {
-    final familyId = await _tokenService.getFamilyId();
-    if (familyId == null) {
-      throw Exception('No family ID found.');
-    }
+  Future<Room> createRoom(String name, String familyId, String icon) async {
     final response = await _apiService.post(
-      'families/$familyId/rooms',
-      body: {'name': name},
+      'items/rooms',
+      body: {'room_name': name, 'family_id': familyId, 'room_icon': icon},
       requireAuth: true,
     );
     return Room.fromJson(response);

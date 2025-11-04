@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum UserRole { ADMIN, MEMBER }
+enum UserRole { admin, member }
 
 class FamilyMember extends Equatable {
   final String id;
@@ -18,12 +18,39 @@ class FamilyMember extends Equatable {
   });
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) {
+    UserRole role = UserRole.member;
+    if (json['UserFamily'] != null && json['UserFamily']['role'] != null) {
+      try {
+        role = UserRole.values.firstWhere(
+            (e) => e.toString() == 'UserRole.${json['UserFamily']['role']}');
+      } catch (e) {
+        // Handle cases where the role string doesn't match enum values
+        role = UserRole.member;
+      }
+    }
+
     return FamilyMember(
       id: json['id'],
       firstName: json['first_name'],
       lastName: json['last_name'],
       email: json['email'],
-      role: UserRole.values.firstWhere((e) => e.toString() == 'UserRole.${json['UserFamily']['role']}'),
+      role: role,
+    );
+  }
+
+  FamilyMember copyWith({
+    String? id,
+    String? firstName,
+    String? lastName,
+    String? email,
+    UserRole? role,
+  }) {
+    return FamilyMember(
+      id: id ?? this.id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      role: role ?? this.role,
     );
   }
 

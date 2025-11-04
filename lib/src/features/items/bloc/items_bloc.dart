@@ -35,7 +35,8 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     Emitter<ItemsState> emit,
   ) async {
     try {
-      await _itemsRepository.createItem(event.roomId, event.name);
+      await _itemsRepository.createItem(
+          event.roomId, event.name, event.quantity);
       add(ItemsFetchRequested(roomId: event.roomId));
     } catch (e) {
       emit(ItemsError(message: e.toString()));
@@ -49,8 +50,10 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     try {
       await _itemsRepository.updateItem(
         event.itemId,
-        isPurchased: event.isPurchased,
+        status: event.status,
         cost: event.cost,
+        quantity: event.quantity,
+        name: event.name,
       );
       add(ItemsFetchRequested(roomId: event.roomId));
     } catch (e) {

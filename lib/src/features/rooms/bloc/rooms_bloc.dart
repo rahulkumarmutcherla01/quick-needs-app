@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package.equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import 'package:project/src/features/rooms/data/models/room.dart';
 import 'package:project/src/features/rooms/data/repositories/rooms_repository.dart';
 
@@ -22,7 +22,7 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   ) async {
     emit(RoomsLoading());
     try {
-      final rooms = await _roomsRepository.getRooms();
+      final rooms = await _roomsRepository.getRooms(event.familyId);
       emit(RoomsLoadSuccess(rooms: rooms));
     } catch (e) {
       emit(RoomsError(message: e.toString()));
@@ -34,8 +34,8 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
     Emitter<RoomsState> emit,
   ) async {
     try {
-      await _roomsRepository.createRoom(event.name);
-      add(RoomsFetchRequested());
+      await _roomsRepository.createRoom(event.name, event.familyId, event.icon);
+      add(RoomsFetchRequested(familyId: event.familyId));
     } catch (e) {
       emit(RoomsError(message: e.toString()));
     }

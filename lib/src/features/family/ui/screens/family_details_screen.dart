@@ -5,7 +5,6 @@ import 'package:project/src/features/auth/bloc/auth_bloc.dart';
 import 'package:project/src/features/family/bloc/family_details_bloc.dart';
 import 'package:project/src/features/family/data/models/family_member.dart';
 import 'package:project/src/features/family/data/repositories/family_repository.dart';
-import 'package:project/src/features/rooms/data/repositories/rooms_repository.dart';
 import 'package:project/src/features/rooms/ui/screens/rooms_dashboard.dart';
 
 class FamilyDetailsScreen extends StatelessWidget {
@@ -32,8 +31,10 @@ class FamilyDetailsScreen extends StatelessWidget {
             }
             if (state is FamilyDetailsLoadSuccess) {
               final family = state.family;
-              final authState = context.read<AuthBloc>().state as AuthAuthenticated;
-              final currentUserMember = family.members?.firstWhere((member) => member.id == authState.user.id);
+              final authState =
+                  context.read<AuthBloc>().state as AuthAuthenticated;
+              final currentUserMember = family.members
+                  ?.firstWhere((member) => member.id == authState.user.id);
               final bool amIAdmin = currentUserMember?.role == UserRole.ADMIN;
 
               return Padding(
@@ -75,16 +76,9 @@ class FamilyDetailsScreen extends StatelessWidget {
                             leading: CircleAvatar(
                               child: Text(member.firstName[0]),
                             ),
-                            title: Text('${member.firstName} ${member.lastName ?? ''}'),
+                            title: Text(
+                                '${member.firstName} ${member.lastName ?? ''}'),
                             subtitle: Text(member.email),
-                            trailing: amIAdmin && member.id != authState.user.id
-                                ? IconButton(
-                                    icon: const Icon(Icons.remove_circle_outline),
-                                    onPressed: () {
-                                      // TODO: Implement remove user functionality
-                                    },
-                                  )
-                                : null,
                           );
                         },
                       ),
@@ -99,9 +93,9 @@ class FamilyDetailsScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => BlocProvider.value(
-                              value: BlocProvider.of<FamilyDetailsBloc>(context),
-                              child: RoomsDashboard(isAdmin: amIAdmin),
+                            builder: (_) => RoomsDashboard(
+                              isAdmin: amIAdmin,
+                              familyId: family.id,
                             ),
                           ),
                         );

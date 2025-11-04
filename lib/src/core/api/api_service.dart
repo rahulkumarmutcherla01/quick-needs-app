@@ -64,6 +64,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patch(String endpoint, {dynamic body, bool requireAuth = false}) async {
+    final headers = await _getHeaders(requireAuth: requireAuth);
+    try {
+      final response = await _client.patch(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: headers,
+        body: jsonEncode(body),
+      ).timeout(_timeoutDuration);
+      return _handleResponse(response);
+    } on TimeoutException {
+      throw Exception('The connection timed out. Please try again.');
+    } on SocketException {
+      throw Exception('Could not connect to the server. Please check your internet connection.');
+    }
+  }
+
   Future<dynamic> delete(String endpoint, {bool requireAuth = false}) async {
     final headers = await _getHeaders(requireAuth: requireAuth);
     try {

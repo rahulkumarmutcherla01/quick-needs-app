@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/items/ui/screens/room_details_screen.dart';
-import 'package:project/src/features/rooms/bloc/rooms_bloc.dart';
+import 'package/project/src/features/rooms/bloc/rooms_bloc.dart';
 import 'package:project/src/features/rooms/data/repositories/rooms_repository.dart';
 
 class RoomsDashboard extends StatelessWidget {
   final bool isAdmin;
+  final String familyId;
 
-  const RoomsDashboard({super.key, required this.isAdmin});
+  const RoomsDashboard({super.key, required this.isAdmin, required this.familyId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class RoomsDashboard extends StatelessWidget {
       body: BlocProvider(
         create: (context) => RoomsBloc(
           roomsRepository: context.read<RoomsRepository>(),
-        )..add(RoomsFetchRequested()),
+        )..add(RoomsFetchRequested(familyId: familyId)),
         child: BlocBuilder<RoomsBloc, RoomsState>(
           builder: (context, state) {
             if (state is RoomsLoading) {
@@ -30,7 +31,7 @@ class RoomsDashboard extends StatelessWidget {
             if (state is RoomsLoadSuccess) {
               return Column(
                 children: [
-                  if (isAdmin) _buildCreateRoomForm(context),
+                  if (isAdmin) _buildCreateRoomForm(context, familyId),
                   Expanded(
                     child: ListView.builder(
                       itemCount: state.rooms.length,
@@ -59,7 +60,7 @@ class RoomsDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateRoomForm(BuildContext context) {
+  Widget _buildCreateRoomForm(BuildContext context, String familyId) {
     final controller = TextEditingController();
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -77,7 +78,11 @@ class RoomsDashboard extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               if (controller.text.isNotEmpty) {
-                context.read<RoomsBloc>().add(RoomCreateRequested(name: controller.text));
+                context.read<RoomsBloc>().add(RoomCreateRequested(
+                      name: controller.text,
+                      familyId: familyId,
+                      icon: "default_icon", // Hardcoded for now
+                    ));
                 controller.clear();
               }
             },

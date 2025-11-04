@@ -19,26 +19,39 @@ class ItemsFetchRequested extends ItemsEvent {
 class ItemCreateRequested extends ItemsEvent {
   final String roomId;
   final String name;
+  final int quantity;
 
-  const ItemCreateRequested({required this.roomId, required this.name});
+  const ItemCreateRequested(
+      {required this.roomId, required this.name, required this.quantity});
 
   @override
-  List<Object> get props => [roomId, name];
+  List<Object> get props => [roomId, name, quantity];
 }
 
 class ItemUpdateRequested extends ItemsEvent {
   final String roomId;
   final String itemId;
-  final bool? isPurchased;
+  final ItemStatus? status;
   final double? cost;
+  final int? quantity;
+  final String? name;
 
   const ItemUpdateRequested({
     required this.roomId,
     required this.itemId,
-    this.isPurchased,
+    this.status,
     this.cost,
+    this.quantity,
+    this.name,
   });
 
   @override
-  List<Object> get props => [roomId, itemId, isPurchased ?? '', cost ?? ''];
+  List<Object> get props => [
+        roomId,
+        itemId,
+        status ?? '',
+        cost ?? '',
+        quantity ?? '',
+        name ?? ''
+      ];
 }
