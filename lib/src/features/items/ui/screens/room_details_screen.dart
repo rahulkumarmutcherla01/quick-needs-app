@@ -60,7 +60,12 @@ class RoomDetailsScreen extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  // TODO: Implement delete functionality
+                                  context.read<ItemsBloc>().add(
+                                        ItemDeleteRequested(
+                                          roomId: room.id,
+                                          itemId: item.id,
+                                        ),
+                                      );
                                 },
                               ),
                             ],

@@ -1,5 +1,8 @@
 part of 'items_bloc.dart';
 
+import 'package:equatable/equatable.dart';
+import 'package:project/src/features/items/data/models/item.dart';
+
 abstract class ItemsState extends Equatable {
   const ItemsState();
 

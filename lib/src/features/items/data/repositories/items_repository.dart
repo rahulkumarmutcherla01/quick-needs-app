@@ -1,5 +1,5 @@
 import 'package:project/src/core/api/api_service.dart';
-import 'package/project/src/features/items/data/models/item.dart';
+import 'package:project/src/features/items/data/models/item.dart';
 
 class ItemsRepository {
   final ApiService _apiService;
@@ -16,7 +16,7 @@ class ItemsRepository {
   Future<Item> createItem(String roomId, String name, int quantity) async {
     final response = await _apiService.post(
       'items/rooms/$roomId/items',
-      body: {'name': name, 'quantity': quantity},
+      body: {'item_name': name, 'quantity': quantity},
       requireAuth: true,
     );
     return Item.fromJson(response);
@@ -32,10 +32,10 @@ class ItemsRepository {
     final response = await _apiService.patch(
       'items/$itemId',
       body: {
-        'is_purchased': status == ItemStatus.PURCHASED,
+        'status': status?.name.toLowerCase(),
         'cost': cost,
         'quantity': quantity,
-        'name': name,
+        'item_name': name,
       },
       requireAuth: true,
     );

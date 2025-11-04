@@ -22,7 +22,7 @@ class Item extends Equatable {
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
       id: json['id'],
-      name: json['name'],
+      name: json['item_name'],
       roomId: json['room_id'],
       status: (json['status'] as String).toItemStatus(),
       quantity: json['quantity'],
@@ -33,7 +33,7 @@ class Item extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'item_name': name,
       'room_id': roomId,
       'status': status.name.toLowerCase(),
       'quantity': quantity,

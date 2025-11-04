@@ -1,5 +1,8 @@
 part of 'items_bloc.dart';
 
+import 'package:equatable/equatable.dart';
+import 'packagepackage:project/src/features/items/data/models/item.dart';
+
 abstract class ItemsEvent extends Equatable {
   const ItemsEvent();
 
@@ -54,4 +57,14 @@ class ItemUpdateRequested extends ItemsEvent {
         quantity ?? '',
         name ?? ''
       ];
+}
+
+class ItemDeleteRequested extends ItemsEvent {
+  final String roomId;
+  final String itemId;
+
+  const ItemDeleteRequested({required this.roomId, required this.itemId});
+
+  @override
+  List<Object> get props => [roomId, itemId];
 }

@@ -15,6 +15,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     on<ItemsFetchRequested>(_onFetchRequested);
     on<ItemCreateRequested>(_onCreateRequested);
     on<ItemUpdateRequested>(_onUpdateRequested);
+    on<ItemDeleteRequested>(_onDeleteRequested);
   }
 
   Future<void> _onFetchRequested(
@@ -55,6 +56,18 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
         quantity: event.quantity,
         name: event.name,
       );
+      add(ItemsFetchRequested(roomId: event.roomId));
+    } catch (e) {
+      emit(ItemsError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteRequested(
+    ItemDeleteRequested event,
+    Emitter<ItemsState> emit,
+  ) async {
+    try {
+      await _itemsRepository.deleteItem(event.itemId);
       add(ItemsFetchRequested(roomId: event.roomId));
     } catch (e) {
       emit(ItemsError(message: e.toString()));

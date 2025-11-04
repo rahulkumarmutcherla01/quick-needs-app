@@ -21,8 +21,7 @@ class FamilyMember extends Equatable {
     UserRole role = UserRole.member;
     if (json['UserFamily'] != null && json['UserFamily']['role'] != null) {
       try {
-        role = UserRole.values.firstWhere(
-            (e) => e.toString() == 'UserRole.${json['UserFamily']['role']}');
+        role = UserRole.values.byName(json['UserFamily']['role']);
       } catch (e) {
         // Handle cases where the role string doesn't match enum values
         role = UserRole.member;
