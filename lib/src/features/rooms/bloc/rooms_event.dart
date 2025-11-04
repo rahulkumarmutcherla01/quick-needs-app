@@ -19,9 +19,10 @@ class RoomsFetchRequested extends RoomsEvent {
 class RoomCreateRequested extends RoomsEvent {
   final String name;
   final String familyId;
+  final String icon;
 
-  const RoomCreateRequested({required this.name, required this.familyId});
+  const RoomCreateRequested({required this.name, required this.familyId, required this.icon});
 
   @override
-  List<Object> get props => [name, familyId];
+  List<Object> get props => [name, familyId, icon];
 }
