@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/src/features/auth/bloc/auth_bloc.dart';
-import 'package:project/src/features/auth/data/models/user.dart';
+import 'package:project/src/features/family/data/models/family_member.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
