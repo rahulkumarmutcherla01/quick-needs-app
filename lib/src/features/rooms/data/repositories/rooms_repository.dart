@@ -7,7 +7,7 @@ class RoomsRepository {
   RoomsRepository({ApiService? apiService}) : _apiService = apiService ?? ApiService();
 
   Future<List<Room>> getRooms(String familyId) async {
-    final response = await _apiService.get('items/rooms?familyId=$familyId', requireAuth: true);
+    final response = await _apiService.get('items/rooms?family_id=$familyId', requireAuth: true);
     return (response as List).map((data) => Room.fromJson(data)).toList();
   }
 
